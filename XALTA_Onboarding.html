@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Oficial — XALTA AI</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4LMHHZXXLJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4LMHHZXXLJ');
+</script>
+<style>
+  :root {
+    --navy: #ffffff;
+    --navy2: #f8fafc;
+    --navy3: #f1f5f9;
+    --gold: #2563EB;
+    --teal: #10b981;
+    --white: #0f172a;
+    --gray: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--navy); color: var(--white); font-family: 'Inter', sans-serif; }
+  header { background: var(--navy2); padding: 40px; text-align: center; border-bottom: 1px solid #eee; }
+  .header-badge { display: inline-block; background: rgba(37,99,235,0.1); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 10px; }
+  h1 { font-size: 32px; font-weight: 900; }
+  h1 span { color: var(--gold); }
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .card { background: var(--navy2); border-radius: 16px; border: 1px solid #eee; padding: 30px; margin-bottom: 20px; }
+  .field { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  label { font-size: 13px; font-weight: 700; color: var(--white); }
+  input, select, textarea { background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-family: inherit; }
+  .btn-next { background: #000; color: #fff; padding: 14px 40px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; width: 100%; }
+  .btn-next:hover { background: var(--gold); }
+</style>
+</head>
+<body class="lang-es">
+
+<header>
+  <div class="header-badge">✅ CLIENTE CONFIRMADO — ONBOARDING XALTA</div>
+  <h1>Bienvenido a <span>XALTA AI</span></h1>
+  <p>Este formulario nos permite configurar tu autopilot en menos de 48 horas.</p>
+</header>
+
+<div class="container">
+  <form id="onboardingForm">
+    <div class="card">
+      <div class="field">
+        <label>Nombre del Negocio</label>
+        <input type="text" name="nombre_negocio" placeholder="Ej: Tacos El Dandy" required>
+      </div>
+      <div class="field">
+        <label>Paquete Seleccionado</label>
+        <select name="paquete" required>
+          <option value="">Selecciona tu plan...</option>
+          <option>Starter — $300/mes</option>
+          <option>Growth — $600/mes</option>
+          <option>Full Autopilot — $1,200/mes</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>¿Qué redes quieres automatizar?</label>
+        <input type="text" name="redes" placeholder="IG, FB, TikTok, etc.">
+      </div>
+      <div class="field">
+        <label>Historia del Negocio (breve)</label>
+        <textarea name="historia" placeholder="Cuéntanos un poco para que la IA sepa cómo escribir..."></textarea>
+      </div>
+      <button type="submit" class="btn-next" id="submitBtn">Enviar y Activar Autopilot</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('onboardingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    const data = {
+      nombre_negocio: this.nombre_negocio.value,
+      paquete: this.paquete.value,
+      redes: this.redes.value,
+      historia: this.historia.value,
+      submitted_at: new Date().toISOString()
+    };
+    try {
+      await fetch('https://n8n-production-df6ae.up.railway.app/webhook/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      btn.textContent = '✅ ¡Enviado! Te contactamos en 48hrs.';
+      btn.style.background = '#10b981';
+      this.reset();
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Error — Intenta de nuevo';
+      btn.style.background = '#ef4444';
+    }
+  });
+</script>
+
+</body>
+</html>

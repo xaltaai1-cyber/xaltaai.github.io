@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir Contenido — XALTA AI</title>
+  <style>
+    :root { --blue: #2563EB; --navy: #0f172a; --light: #f8fafc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--navy); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .card { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; border-bottom: 4px solid var(--blue); }
+    .logo { font-size: 24px; font-weight: 900; margin-bottom: 10px; }
+    .logo span { color: var(--blue); }
+    h2 { font-size: 18px; color: var(--gray); margin-bottom: 30px; font-weight: 400; }
+    .upload-btn { background: var(--blue); color: #fff; padding: 16px 30px; border-radius: 8px; font-weight: 800; cursor: pointer; display: inline-block; text-decoration: none; border: none; font-size: 16px; transition: transform 0.2s; }
+    .upload-btn:hover { transform: scale(1.05); }
+    .footer { margin-top: 20px; font-size: 12px; color: #999; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">X<span>ALTA</span> AI</div>
+  <h2>Sube tus fotos o videos aquí para activarlos en el autopilot.</h2>
+  
+  <input type="file" id="fileInput" style="display:none;" multiple accept="image/*,video/*">
+  <button type="button" class="upload-btn" id="selectBtn" onclick="document.getElementById('fileInput').click()">📸 Seleccionar Archivos</button>
+  <div id="statusMsg" style="margin-top:16px; font-size:13px; display:none;"></div>
+
+  <p style="margin-top:20px; font-size:13px; color:var(--blue); font-weight:700;">Empezamos a procesar en 48 horas.</p>
+</div>
+
+<div class="footer">© 2026 XALTA — Visibility OS</div>
+
+<script>
+  const CLOUD = 'dxh7wdodu';
+  const PRESET = 'ml_default';
+  const N8N_WEBHOOK = 'https://n8n-production-df6ae.up.railway.app/webhook/checkin-upload';
+
+  document.getElementById('fileInput').addEventListener('change', async function() {
+    const files = Array.from(this.files);
+    if (!files.length) return;
+    const btn = document.getElementById('selectBtn');
+    const status = document.getElementById('statusMsg');
+    btn.disabled = true;
+    status.style.display = 'block';
+    status.style.color = '#2563EB';
+    const urls = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      status.textContent = `Subiendo ${i + 1} de ${files.length}: ${file.name}...`;
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', PRESET);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/auto/upload`, { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.secure_url) urls.push(data.secure_url);
+    }
+    status.textContent = 'Notificando a XALTA...';
+    await fetch(N8N_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ urls, count: urls.length, uploaded_at: new Date().toISOString() })
+    });
+    status.style.color = '#10b981';
+    status.textContent = `✅ ${urls.length} archivo(s) enviado(s). Te avisamos en 48 horas.`;
+    btn.textContent = 'Subir más archivos';
+    btn.disabled = false;
+    this.value = '';
+  });
+</script>
+
+</body>
+</html>
