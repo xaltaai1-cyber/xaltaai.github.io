@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir Contenido — XALTA AI</title>
+  <meta name="description" content="Sube tus fotos y videos a XALTA AI. Nosotros hacemos el resto — captions bilingües, publicación automática en IG, FB y TikTok.">
+  <meta property="og:title" content="Subir Contenido — XALTA AI">
+  <meta property="og:description" content="Sube tus fotos/videos y el autopilot hace todo lo demás.">
+  <meta property="og:type" content="website">
+  <meta name="robots" content="noindex">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LMHHZXXLJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4LMHHZXXLJ');
+  </script>
+  <style>
+    :root { --blue: #2563EB; --navy: #0f172a; --light: #f8fafc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--navy); padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .card { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; border-bottom: 4px solid var(--blue); }
+    .logo { font-size: 24px; font-weight: 900; margin-bottom: 10px; }
+    .logo span { color: var(--blue); }
+    h2 { font-size: 18px; color: var(--gray); margin-bottom: 30px; font-weight: 400; }
+    .field { margin-bottom: 16px; text-align: left; }
+    .field label { display: block; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .field input, .field textarea { width: 100%; background: var(--light); border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 14px; }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .upload-btn { background: var(--blue); color: #fff; padding: 16px 30px; border-radius: 8px; font-weight: 800; cursor: pointer; display: inline-block; text-decoration: none; border: none; font-size: 16px; transition: transform 0.2s; width: 100%; }
+    .upload-btn:hover { transform: scale(1.05); }
+    .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .footer { margin-top: 20px; font-size: 12px; color: #999; }
+    .error-msg { color: #ef4444; font-size: 12px; margin-top: 4px; display: none; }
+  </style>
+</head>
+<body>
+
+<header style="background:#fff; border-bottom:1px solid #e2e8f0; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10;">
+  <a href="index.html" style="font-size:18px; font-weight:900; letter-spacing:2px; color:#0f172a; text-decoration:none;">X<span style="color:#2563EB">ALTA</span></a>
+  <a href="dashboard.html" style="font-size:12px; font-weight:700; color:#2563EB; text-decoration:none;">📊 Ver mi Portal VIP →</a>
+</header>
+
+<div class="card">
+  <div class="logo">X<span>ALTA</span> AI</div>
+  <h2>Sube tus fotos o videos aquí para activarlos en el autopilot.</h2>
+
+  <div class="field">
+    <label>📱 Teléfono del Cliente (10 dígitos)</label>
+    <input type="tel" id="clientPhone" placeholder="Ej: 9563194741" required pattern="[0-9]{10}" maxlength="10">
+    <div class="error-msg" id="phoneError">Por favor ingresa un número de 10 dígitos.</div>
+  </div>
+
+  <div class="field">
+    <label>📝 Notas (opcional)</label>
+    <textarea id="clientNotes" placeholder="Instrucciones especiales, contexto del contenido, etc."></textarea>
+  </div>
+  
+  <input type="file" id="fileInput" style="display:none;" multiple accept="image/*,video/*">
+  <button type="button" class="upload-btn" id="selectBtn" onclick="handleUploadClick()">📸 Seleccionar Archivos</button>
+  <div id="statusMsg" style="margin-top:16px; font-size:13px; display:none;"></div>
+
+  <p style="margin-top:20px; font-size:13px; color:var(--blue); font-weight:700;">Empezamos a procesar en 48 horas.</p>
+  <p style="margin-top:8px; font-size:11px; color:#999;">Máximo 100MB por archivo.</p>
+</div>
+
+<div class="footer">© 2026 XALTA — Visibility OS</div>
+
+<script>
+  const CLOUD = 'dxh7wdodu';
+  const PRESET = 'ml_default';
+  // Dynamic API Domain pointing to CNAME xalta CNAME / Render CNAME
+  const N8N_WEBHOOK = 'https://api.xaltaai.com/webhook/checkin-upload';
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+
+  function validatePhone() {
+    const phone = document.getElementById('clientPhone').value.trim();
+    const phoneError = document.getElementById('phoneError');
+    const isValid = /^[0-9]{10}$/.test(phone);
+    phoneError.style.display = isValid ? 'none' : 'block';
+    return isValid;
+  }
+
+  function handleUploadClick() {
+    if (!validatePhone()) {
+      document.getElementById('clientPhone').focus();
+      return;
+    }
+    document.getElementById('fileInput').click();
+  }
+
+  document.getElementById('fileInput').addEventListener('change', async function() {
+    const files = Array.from(this.files);
+    if (!files.length) return;
+
+    // Validate phone before upload
+    if (!validatePhone()) {
+      document.getElementById('clientPhone').focus();
+      return;
+    }
+
+    // Validate file sizes (100MB max per file)
+    const oversized = files.filter(f => f.size > MAX_FILE_SIZE);
+    if (oversized.length > 0) {
+      const status = document.getElementById('statusMsg');
+      status.style.display = 'block';
+      status.style.color = '#ef4444';
+      status.textContent = `❌ ${oversized.map(f => f.name).join(', ')} excede(n) el límite de 100MB.`;
+      this.value = '';
+      return;
+    }
+
+    const btn = document.getElementById('selectBtn');
+    const status = document.getElementById('statusMsg');
+    const clientPhone = document.getElementById('clientPhone').value.trim();
+    const clientNotes = document.getElementById('clientNotes').value.trim();
+
+    btn.disabled = true;
+    status.style.display = 'block';
+    status.style.color = '#2563EB';
+    const urls = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      status.textContent = `Subiendo ${i + 1} de ${files.length}: ${file.name}...`;
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', PRESET);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/auto/upload`, { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.secure_url) urls.push(data.secure_url);
+    }
+    status.textContent = 'Notificando a XALTA...';
+    await fetch(N8N_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        file_urls: urls,
+        count: urls.length,
+        client_phone: clientPhone,
+        notes: clientNotes,
+        uploaded_at: new Date().toISOString()
+      })
+    });
+    status.style.color = '#10b981';
+    status.textContent = `✅ ${urls.length} archivo(s) enviado(s). Te avisamos en 48 horas.`;
+    btn.textContent = 'Subir más archivos';
+    btn.disabled = false;
+    this.value = '';
+  });
+</script>
+
+</body>
+</html>

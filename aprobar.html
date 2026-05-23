@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprobación de Contenido — XALTA AI</title>
+  <meta name="description" content="Revisa y aprueba el contenido generado por XALTA AI antes de publicarlo.">
+  <meta property="og:title" content="Aprobar Contenido — XALTA AI">
+  <meta property="og:description" content="Tu contenido está listo para revisar y aprobar.">
+  <meta property="og:type" content="website">
+  <meta name="robots" content="noindex">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LMHHZXXLJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4LMHHZXXLJ');
+  </script>
+  <style>
+    :root {
+      --blue: #2563EB;
+      --navy: #0f172a;
+      --gray: #64748b;
+      --light: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--navy); padding: 20px; }
+    .header { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--blue); }
+    .logo { font-size: 20px; font-weight: 900; }
+    .logo span { color: var(--blue); }
+    .container { background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto; }
+    .media-preview { background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; text-align: center; }
+    .media-preview video, .media-preview img { width: 100%; display: block; max-height: 500px; object-fit: contain; }
+    .caption-box { background: var(--light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--blue); margin-bottom: 20px; font-size: 14px; line-height: 1.6; }
+    .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn { padding: 16px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; text-align: center; text-decoration: none; }
+    .btn-approve { background: var(--blue); color: #fff; }
+    .btn-reject { background: #eee; color: #333; }
+    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: var(--gray); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">X<span>ALTA</span> AI</div>
+  <div style="background:rgba(37,99,235,0.1); color:var(--blue); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:800;">REVISIÓN DE CONTENIDO</div>
+</div>
+
+<div class="container">
+  <div id="loading" style="text-align:center; padding:40px;">Cargando tu contenido...</div>
+  <div id="content" style="display:none;">
+    <div class="media-preview" id="mediaPreview">
+      <!-- Video or image will be inserted dynamically -->
+    </div>
+    <div class="caption-box" id="captionText"></div>
+    <div class="btn-group">
+      <button class="btn btn-approve" onclick="aprobar()">✓ Todo Perfecto</button>
+      <button class="btn btn-reject" onclick="rechazar()">✎ Solicitar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">XALTA AI · San Antonio · Laredo · South Texas</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const recordId = params.get('record_id');
+
+  // Check if a URL is an image based on extension
+  function isImageUrl(url) {
+    if (!url) return false;
+    const imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+    const lowerUrl = url.toLowerCase().split('?')[0];
+    return imageExts.some(ext => lowerUrl.endsWith(ext));
+  }
+
+  if (recordId) {
+    // Custom subdomain pointing to Render CNAME
+    fetch('https://api.xaltaai.com/webhook/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ record_id: recordId })
+    })
+    .then(r => r.json())
+    .then(data => {
+      const mediaUrl = data.media_url || data.image_url;
+      const caption = data.caption_es;
+      const mediaPreview = document.getElementById('mediaPreview');
+
+      // Show image or video based on URL
+      if (isImageUrl(mediaUrl)) {
+        const img = document.createElement('img');
+        img.src = mediaUrl;
+        img.alt = 'Contenido para aprobar';
+        mediaPreview.appendChild(img);
+      } else {
+        const video = document.createElement('video');
+        video.src = mediaUrl;
+        video.controls = true;
+        mediaPreview.appendChild(video);
+      }
+
+      document.getElementById('captionText').innerText = caption;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    });
+  }
+
+  function aprobar() {
+    // Custom subdomain pointing to Render CNAME
+    fetch('https://api.xaltaai.com/webhook/aprobar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ record_id: recordId })
+    }).then(() => alert('¡Aprobado! Xavier publicará esto pronto.'));
+  }
+
+  function rechazar() {
+    const msg = encodeURIComponent(
+      '✏️ Hola Xavier, quiero hacer cambios al post ID ' + (recordId || 'N/A') + '.\n\nCambios solicitados:\n'
+    );
+    window.open('https://wa.me/19563194741?text=' + msg, '_blank');
+  }
+</script>
+</body>
+</html>

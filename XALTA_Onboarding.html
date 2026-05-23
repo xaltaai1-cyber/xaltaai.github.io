@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Oficial — XALTA AI</title>
+<meta name="description" content="Completa tu onboarding con XALTA AI. Configuramos tu autopilot de marketing en menos de 48 horas.">
+<meta property="og:title" content="Onboarding — XALTA AI">
+<meta property="og:description" content="Activa tu autopilot de marketing en 48 horas. Sin reuniones, sin complicaciones.">
+<meta property="og:type" content="website">
+<meta name="robots" content="noindex">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4LMHHZXXLJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4LMHHZXXLJ');
+</script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f8fafc;
+    --bg-softer: #f1f5f9;
+    --accent-blue: #2563EB;
+    --accent-green: #10b981;
+    --text: #0f172a;
+    --gray: #64748b;
+    /* legacy aliases — do not use in new code */
+    --navy: var(--bg);
+    --navy2: var(--bg-soft);
+    --navy3: var(--bg-softer);
+    --gold: var(--accent-blue);
+    --teal: var(--accent-green);
+    --white: var(--text);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--navy); color: var(--white); font-family: 'Inter', sans-serif; }
+  header { background: var(--navy2); padding: 40px; text-align: center; border-bottom: 1px solid #eee; }
+  .header-badge { display: inline-block; background: rgba(37,99,235,0.1); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 10px; }
+  h1 { font-size: 32px; font-weight: 900; }
+  h1 span { color: var(--gold); }
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .card { background: var(--navy2); border-radius: 16px; border: 1px solid #eee; padding: 30px; margin-bottom: 20px; }
+  .card-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+  .field { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  label { font-size: 13px; font-weight: 700; color: var(--white); }
+  input, select, textarea { background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-family: inherit; }
+  textarea { resize: vertical; min-height: 80px; }
+  .btn-next { background: #000; color: #fff; padding: 14px 40px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; width: 100%; font-size: 16px; transition: all 0.2s; }
+  .btn-next:hover { background: var(--gold); }
+  .btn-next:disabled { opacity: 0.6; cursor: not-allowed; }
+</style>
+</head>
+<body class="lang-es">
+
+<header>
+  <div class="header-badge">✅ CLIENTE CONFIRMADO — ONBOARDING XALTA</div>
+  <h1>Bienvenido a <span>XALTA AI</span></h1>
+  <p>Este formulario nos permite configurar tu autopilot en menos de 48 horas.</p>
+</header>
+
+<div class="container">
+  <form id="onboardingForm">
+    <!-- CARD 1: Business Info -->
+    <div class="card">
+      <div class="card-title">📋 Información del Negocio</div>
+      <div class="field">
+        <label>Nombre del Negocio</label>
+        <input type="text" name="client_name" placeholder="Ej: Tacos El Dandy" required>
+      </div>
+      <div class="field">
+        <label>📱 Teléfono del Cliente (10 dígitos)</label>
+        <input type="tel" name="client_phone" placeholder="Ej: 9563194741" required pattern="[0-9]{10}" maxlength="10">
+      </div>
+      <div class="field">
+        <label>Tipo de Negocio</label>
+        <select name="business_type" required>
+          <option value="">Selecciona el tipo...</option>
+          <option value="restaurant">Restaurante / Taquería</option>
+          <option value="barbershop">Barbería / Salón</option>
+          <option value="med_spa">Med Spa / Estética</option>
+          <option value="contractor">Contractor / Roofing</option>
+          <option value="realtor">Realtor / Agente</option>
+          <option value="boutique">Boutique / Tienda</option>
+          <option value="other">Otro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Paquete Seleccionado</label>
+        <select name="paquete" required>
+          <option value="">Selecciona tu plan...</option>
+          <option>Starter — $300/mes</option>
+          <option>Growth — $600/mes</option>
+          <option>Full Autopilot — $1,200/mes</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>¿Qué redes quieres automatizar?</label>
+        <input type="text" name="redes" placeholder="IG, FB, TikTok, etc.">
+      </div>
+      <div class="field">
+        <label>Historia del Negocio (breve)</label>
+        <textarea name="historia" placeholder="Cuéntanos un poco para que la IA sepa cómo escribir..."></textarea>
+      </div>
+    </div>
+
+    <!-- CARD 2: Brand Voice -->
+    <div class="card">
+      <div class="card-title">🎨 Voz de Marca</div>
+      <div class="field">
+        <label>Tono de Marca</label>
+        <select name="brand_tone" required>
+          <option value="">Selecciona el tono...</option>
+          <option value="amigable_casual">Amigable y casual</option>
+          <option value="elegante_profesional">Elegante y profesional</option>
+          <option value="divertido_energico">Divertido y enérgico</option>
+          <option value="serio_confiable">Serio y confiable</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Idioma del Contenido</label>
+        <select name="brand_language" required>
+          <option value="">Selecciona el idioma...</option>
+          <option value="bilingue">Bilingüe (Español + Inglés)</option>
+          <option value="espanol">Español</option>
+          <option value="ingles">Inglés</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Palabras Clave de Marca</label>
+        <input type="text" name="brand_keywords" placeholder="Ej: auténtico, casero, familia, sabor">
+      </div>
+      <div class="field">
+        <label>Cosas que NO Mencionar</label>
+        <input type="text" name="brand_avoid" placeholder="Ej: no mencionar precios, no comparar con competidores">
+      </div>
+    </div>
+
+    <button type="submit" class="btn-next" id="submitBtn">Enviar y Activar Autopilot</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('onboardingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    const data = {
+      client_name: this.client_name.value,
+      client_phone: this.client_phone.value,
+      business_type: this.business_type.value,
+      paquete: this.paquete.value,
+      redes: this.redes.value,
+      historia: this.historia.value,
+      brand_tone: this.brand_tone.value,
+      brand_language: this.brand_language.value,
+      brand_keywords: this.brand_keywords.value,
+      brand_avoid: this.brand_avoid.value,
+      submitted_at: new Date().toISOString()
+    };
+    try {
+      // Custom subdomain pointing to Render CNAME
+      await fetch('https://api.xaltaai.com/webhook/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      window.location.href = 'thank-you.html';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Error — Intenta de nuevo';
+      btn.style.background = '#ef4444';
+    }
+  });
+</script>
+
+</body>
+</html>

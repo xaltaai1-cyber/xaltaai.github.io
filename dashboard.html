@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal VIP — XALTA AI</title>
+  <meta name="description" content="Tu Portal VIP de XALTA AI. Revisa tu contenido, aprueba posts y ve todo lo que publicamos para tu negocio.">
+  <meta property="og:title" content="Portal VIP — XALTA AI">
+  <meta property="og:description" content="Revisa y aprueba el contenido de tu autopilot.">
+  <meta property="og:type" content="website">
+  <meta name="robots" content="noindex">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4LMHHZXXLJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4LMHHZXXLJ');
+  </script>
+  <style>
+    :root {
+      --blue: #2563EB;
+      --navy: #0f172a;
+      --gray: #64748b;
+      --light: #f8fafc;
+      --green: #10b981;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+    /* HEADER */
+    .header {
+      background: var(--white);
+      padding: 20px 24px;
+      border-bottom: 3px solid var(--blue);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
+    .logo span { color: var(--blue); }
+    .header-badge {
+      background: rgba(37,99,235,0.1);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* MAIN */
+    .container { max-width: 800px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* LOGIN SCREEN */
+    #loginScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-bottom: 4px solid var(--blue);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .login-card h2 { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+    .login-card p { font-size: 13px; color: var(--gray); margin-bottom: 24px; }
+    .login-card input {
+      width: 100%;
+      background: var(--light);
+      border: 1px solid #ddd;
+      padding: 14px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+    .login-card input:focus { outline: none; border-color: var(--blue); }
+    .btn-login {
+      background: var(--blue);
+      color: var(--white);
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      transition: opacity 0.2s;
+    }
+    .btn-login:hover { opacity: 0.9; }
+    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+    .login-error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+
+    /* DASHBOARD */
+    #dashboard { display: none; }
+
+    /* CLIENT HEADER */
+    .client-header {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-left: 4px solid var(--blue);
+    }
+    .client-avatar {
+      width: 44px;
+      height: 44px;
+      background: rgba(37,99,235,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--blue);
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+    .client-info h2 { font-size: 17px; font-weight: 900; }
+    .client-info p { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .status-active { background: rgba(16,185,129,0.12); color: var(--green); }
+    .status-inactive { background: rgba(239,68,68,0.12); color: var(--red); }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 18px 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .stat-card .stat-label { font-size: 11px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .stat-card .stat-value { font-size: 28px; font-weight: 900; color: var(--navy); }
+    .stat-card .stat-value.warning { color: var(--yellow); }
+
+    /* EVENT BANNER */
+    .event-banner {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .event-banner .event-icon { font-size: 22px; flex-shrink: 0; }
+    .event-banner .event-text h4 { font-size: 13px; font-weight: 800; color: #92400e; }
+    .event-banner .event-text p { font-size: 12px; color: #b45309; margin-top: 2px; }
+    .event-banner .event-cta {
+      margin-left: auto;
+      background: var(--yellow);
+      color: var(--white);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--navy);
+      margin: 24px 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    /* PENDING CARDS */
+    .pending-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-left: 3px solid var(--yellow);
+    }
+    .pending-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      background: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .pending-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .pending-info { flex: 1; min-width: 0; }
+    .pending-info h4 { font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pending-info p { font-size: 12px; color: var(--gray); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pending-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-approve {
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-approve:hover { opacity: 0.85; }
+    .btn-change {
+      background: var(--light);
+      color: var(--gray);
+      border: 1px solid #ddd;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* PUBLISHED GRID */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .post-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .post-card:hover { transform: translateY(-2px); }
+    .post-thumb {
+      height: 110px;
+      background: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+    .post-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .post-thumb video { width: 100%; height: 100%; object-fit: cover; }
+    .post-type-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .post-info { padding: 10px 12px; }
+    .post-info h4 { font-size: 12px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .post-info p { font-size: 11px; color: var(--gray); margin-top: 3px; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 32px;
+      color: var(--gray);
+      font-size: 13px;
+    }
+    .empty-state .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+    /* UPLOAD BUTTON */
+    .upload-cta {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 14px 22px;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.4);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s;
+      z-index: 200;
+    }
+    .upload-cta:hover { transform: scale(1.05); }
+
+    /* FOOTER */
+    .footer { text-align: center; margin-top: 40px; font-size: 12px; color: var(--gray); }
+
+    /* LOADING */
+    .loading-spinner {
+      text-align: center;
+      padding: 40px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal h3 { font-size: 16px; font-weight: 900; margin-bottom: 12px; }
+    .modal .caption-box {
+      background: var(--light);
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      border-left: 3px solid var(--blue);
+      margin-bottom: 12px;
+    }
+    .modal .hashtags { font-size: 12px; color: var(--blue); line-height: 1.8; margin-bottom: 16px; }
+    .modal-close {
+      background: var(--light);
+      border: 1px solid #ddd;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    @media (max-width: 500px) {
+      .pending-actions { flex-direction: column; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .client-header { flex-wrap: wrap; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">X<span>ALTA</span> AI</div>
+  <div class="header-badge">PORTAL VIP</div>
+</div>
+
+<!-- LOGIN -->
+<div class="container">
+  <div id="loginScreen">
+    <div class="login-card">
+      <div style="font-size: 36px; margin-bottom: 12px;">🔐</div>
+      <h2>Tu Portal VIP</h2>
+      <p>Ingresa tu número de teléfono registrado para ver tu contenido</p>
+      <input type="tel" id="phoneInput" placeholder="9563194741" maxlength="10" pattern="[0-9]{10}" inputmode="numeric">
+      <button class="btn-login" id="loginBtn" onclick="login()">Ver Mi Contenido</button>
+      <p class="login-error" id="loginError">Número no encontrado. Verifica e intenta de nuevo.</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+
+    <div id="clientHeader" class="client-header">
+      <div style="display:flex; align-items:center; flex:1; min-width:0;">
+        <div class="client-avatar" id="clientAvatar">--</div>
+        <div class="client-info">
+          <h2 id="clientName">Cargando...</h2>
+          <p id="clientMeta">--</p>
+        </div>
+      </div>
+      <div class="status-badge status-active" id="clientStatus">Activo</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Posts este mes</div>
+        <div class="stat-value" id="statPosts">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Plataformas</div>
+        <div class="stat-value">3</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Por aprobar</div>
+        <div class="stat-value warning" id="statPending">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Plan</div>
+        <div class="stat-value" id="statPlan" style="font-size:16px; padding-top:6px;">--</div>
+      </div>
+    </div>
+
+    <div id="eventBanner" style="display:none;" class="event-banner">
+      <div class="event-icon" id="eventEmoji">🎉</div>
+      <div class="event-text">
+        <h4 id="eventTitle">Evento próximo</h4>
+        <p id="eventDesc">Sube contenido relacionado pronto</p>
+      </div>
+      <a href="checkin.html" class="event-cta">Subir ahora</a>
+    </div>
+
+    <div id="pendingSection" style="display:none;">
+      <div class="section-title">⏳ Por Aprobar</div>
+      <div id="pendingList"></div>
+    </div>
+
+    <div class="section-title">📸 Publicados Recientemente</div>
+    <div id="postsGrid" class="posts-grid">
+      <div class="loading-spinner">Cargando contenido...</div>
+    </div>
+
+    <div class="footer">XALTA AI · San Antonio · Laredo · South Texas</div>
+  </div>
+</div>
+
+<!-- UPLOAD FAB -->
+<a href="checkin.html" class="upload-cta" id="uploadFab" style="display:none;">
+  📸 Subir Contenido
+</a>
+
+<!-- POST MODAL -->
+<div class="modal-overlay" id="postModal">
+  <div class="modal">
+    <h3 id="modalTitle">Detalle del Post</h3>
+    <div id="modalMedia" style="margin-bottom:12px; border-radius:8px; overflow:hidden; max-height:260px; background:#000; text-align:center;"></div>
+    <div class="caption-box" id="modalCaption"></div>
+    <div class="hashtags" id="modalHashtags"></div>
+    <button class="modal-close" onclick="closeModal()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+  // All Baserow access is routed through the n8n proxy — token never exposed to browser.
+  // n8n workflow: /webhook/dashboard-data — actions: login | content | approve
+  const N8N_DASHBOARD = 'https://api.xaltaai.com/webhook/dashboard-data';
+
+  const HISPANIC_EVENTS = [
+    { date: '01-06', name: 'Día de Reyes', emoji: '👑', days: null },
+    { date: '02-14', name: 'San Valentín', emoji: '❤️', days: null },
+    { date: '05-05', name: 'Cinco de Mayo', emoji: '🇲🇽', days: null },
+    { date: '05-10', name: 'Día de las Madres (MX)', emoji: '🌸', days: null },
+    { date: '09-15', name: 'Grito de Independencia', emoji: '🇲🇽', days: null },
+    { date: '11-01', name: 'Día de Muertos', emoji: '💀', days: null },
+    { date: '12-12', name: 'Virgen de Guadalupe', emoji: '🙏', days: null },
+    { date: '12-16', name: 'Inicio de Posadas', emoji: '⭐', days: null },
+    { date: '12-24', name: 'Nochebuena', emoji: '🎄', days: null },
+  ];
+
+  let currentPhone = '';
+  let currentClient = null;
+
+  function getUpcomingEvent() {
+    const today = new Date();
+    for (const ev of HISPANIC_EVENTS) {
+      const [m, d] = ev.date.split('-').map(Number);
+      const evDate = new Date(today.getFullYear(), m - 1, d);
+      const diff = Math.ceil((evDate - today) / (1000 * 60 * 60 * 24));
+      if (diff >= 0 && diff <= 10) return { ...ev, days: diff };
+    }
+    return null;
+  }
+
+  function getInitials(name) {
+    return (name || '??').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('es-MX', { month: 'short', day: 'numeric' });
+  }
+
+  function isVideo(url) {
+    return url && /\.(mp4|mov|avi|webm)/i.test(url.split('?')[0]);
+  }
+
+  async function login() {
+    const phone = document.getElementById('phoneInput').value.trim();
+    if (!/^[0-9]{10}$/.test(phone)) {
+      showLoginError('Ingresa exactamente 10 dígitos.');
+      return;
+    }
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.textContent = 'Buscando...';
+
+    try {
+      const res = await fetch(N8N_DASHBOARD, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', phone })
+      });
+      const data = await res.json();
+      const client = data.client || data.results?.[0];
+      if (!client) {
+        showLoginError('Número no encontrado. Verifica e intenta de nuevo.');
+        btn.disabled = false;
+        btn.textContent = 'Ver Mi Contenido';
+        return;
+      }
+      currentPhone = phone;
+      currentClient = client;
+      showDashboard(client);
+    } catch (e) {
+      showLoginError('Error de conexión. Intenta de nuevo.');
+      btn.disabled = false;
+      btn.textContent = 'Ver Mi Contenido';
+    }
+  }
+
+  function showLoginError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function showDashboard(client) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('uploadFab').style.display = 'flex';
+
+    document.getElementById('clientAvatar').textContent = getInitials(client.client_name);
+    document.getElementById('clientName').textContent = client.client_name || 'Mi Negocio';
+    document.getElementById('clientMeta').textContent = (client.business_type || '') + (client.plan ? ' · Plan ' + client.plan : '');
+    document.getElementById('statPlan').textContent = client.plan || '--';
+
+    const statusEl = document.getElementById('clientStatus');
+    if (client.status === 'active') {
+      statusEl.textContent = 'Activo';
+      statusEl.className = 'status-badge status-active';
+    } else {
+      statusEl.textContent = 'Inactivo';
+      statusEl.className = 'status-badge status-inactive';
+    }
+
+    const event = getUpcomingEvent();
+    if (event) {
+      document.getElementById('eventBanner').style.display = 'flex';
+      document.getElementById('eventEmoji').textContent = event.emoji;
+      document.getElementById('eventTitle').textContent = event.name + (event.days === 0 ? ' — ¡Es hoy!' : ` — en ${event.days} días`);
+      document.getElementById('eventDesc').textContent = 'Sube fotos relacionadas para contenido especial';
+    }
+
+    await loadContent();
+  }
+
+  async function loadContent() {
+    try {
+      const res = await fetch(N8N_DASHBOARD, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'content', phone: currentPhone })
+      });
+      const data = await res.json();
+      const all = data.results || [];
+
+      const pending = all.filter(p => p.status === 'awaiting_approval' || p.status === 'pending');
+      const published = all.filter(p => p.status === 'published');
+
+      const now = new Date();
+      const thirtyAgo = new Date(); thirtyAgo.setDate(now.getDate() - 31);
+      const thisMonth = published.filter(p => p.published_at && new Date(p.published_at) >= thirtyAgo);
+
+      document.getElementById('statPosts').textContent = thisMonth.length;
+      document.getElementById('statPending').textContent = pending.length;
+
+      if (pending.length > 0) {
+        document.getElementById('pendingSection').style.display = 'block';
+        renderPending(pending);
+      }
+
+      renderPublished(published);
+
+    } catch (e) {
+      document.getElementById('postsGrid').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error cargando contenido.</p></div>';
+    }
+  }
+
+  function renderPending(items) {
+    const list = document.getElementById('pendingList');
+    list.innerHTML = '';
+    items.slice(0, 5).forEach(item => {
+      const mediaUrl = item.media_url || item.image_url || '';
+      const thumbHtml = mediaUrl
+        ? `<img src="${mediaUrl}" alt="preview" onerror="this.parentElement.innerHTML='📄'">`
+        : (isVideo(mediaUrl) ? '🎬' : '📄');
+      const caption = item.caption_es || item.caption_en || 'Sin caption';
+      const div = document.createElement('div');
+      div.className = 'pending-card';
+      div.innerHTML = `
+        <div class="pending-thumb">${typeof thumbHtml === 'string' && thumbHtml.startsWith('<') ? thumbHtml : thumbHtml}</div>
+        <div class="pending-info">
+          <h4>${caption.slice(0, 60)}${caption.length > 60 ? '...' : ''}</h4>
+          <p>Esperando tu aprobación · ${formatDate(item.created_at)}</p>
+        </div>
+        <div class="pending-actions">
+          <button class="btn-approve" onclick="aprobar(${item.id}, this)">✓ Aprobar</button>
+          <button class="btn-change" onclick="solicitar(${item.id})">✎</button>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function renderPublished(items) {
+    const grid = document.getElementById('postsGrid');
+    if (items.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Aún no hay posts publicados.<br>¡Sube tu primer contenido!</p></div>';
+      return;
+    }
+    grid.innerHTML = '';
+    items.slice(0, 18).forEach(item => {
+      const mediaUrl = item.media_url || item.image_url || '';
+      const vid = isVideo(mediaUrl);
+      const div = document.createElement('div');
+      div.className = 'post-card';
+      div.onclick = () => openModal(item);
+      let thumbContent = vid
+        ? `<video src="${mediaUrl}" muted playsinline></video><div class="post-type-badge">VIDEO</div>`
+        : mediaUrl
+          ? `<img src="${mediaUrl}" alt="post" loading="lazy" onerror="this.parentElement.innerHTML='📸'">`
+          : '📸';
+      div.innerHTML = `
+        <div class="post-thumb">${thumbContent}</div>
+        <div class="post-info">
+          <h4>${(item.caption_es || 'Post publicado').slice(0, 40)}</h4>
+          <p>${formatDate(item.published_at)} · IG, FB, TK</p>
+        </div>`;
+      grid.appendChild(div);
+    });
+  }
+
+  async function aprobar(id, btn) {
+    btn.disabled = true;
+    btn.textContent = '...';
+    try {
+      await fetch(N8N_DASHBOARD, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'approve', phone: currentPhone, content_id: id })
+      });
+      btn.textContent = '✅';
+      btn.style.background = '#10b981';
+      btn.closest('.pending-card').style.opacity = '0.5';
+      const pendingCount = parseInt(document.getElementById('statPending').textContent) - 1;
+      document.getElementById('statPending').textContent = Math.max(0, pendingCount);
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '✓ Aprobar';
+      alert('Error al aprobar. Intenta de nuevo.');
+    }
+  }
+
+  function solicitar(id) {
+    window.location.href = `mailto:xaltaai1@gmail.com?subject=Cambios post ${id}&body=Hola Xavier, quiero hacer cambios al post ID ${id}.`;
+  }
+
+  function openModal(item) {
+    const mediaUrl = item.media_url || item.image_url || '';
+    const vid = isVideo(mediaUrl);
+    document.getElementById('modalTitle').textContent = formatDate(item.published_at) + ' · Publicado';
+    document.getElementById('modalMedia').innerHTML = mediaUrl
+      ? (vid ? `<video src="${mediaUrl}" controls style="max-width:100%; max-height:260px;"></video>`
+              : `<img src="${mediaUrl}" style="max-width:100%; max-height:260px; object-fit:contain;">`)
+      : '<p style="padding:20px; color:#999; font-size:13px;">Sin media</p>';
+    document.getElementById('modalCaption').textContent = item.caption_es || item.caption_en || 'Sin caption';
+    document.getElementById('modalHashtags').textContent = item.hashtags || '';
+    document.getElementById('postModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('postModal').classList.remove('open');
+    const video = document.querySelector('#modalMedia video');
+    if (video) video.pause();
+  }
+
+  document.getElementById('postModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.getElementById('phoneInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') login();
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('phone')) {
+    document.getElementById('phoneInput').value = params.get('phone');
+    login();
+  }
+</script>
+</body>
+</html>
